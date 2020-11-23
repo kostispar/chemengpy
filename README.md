@@ -23,3 +23,9 @@ Basic concepts and computations in Chemical Engineering
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   Run `python chemeng.py molecular_weight <compound>` in order to calculate the Mr of the compound. For example you may run `python chemeng.py molecular_weight H2O`. This will print `18`. </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Do not forget to use parentheses on more complex compounds. For instance: </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  `python chemeng.py molecular_weight Ba(OH)2`. This will print `171.34168`.
+
+&nbsp;&nbsp;&nbsp;&nbsp; - <b>Finding mass of moles and vice versa</b> </br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  You can calculate the mass (in g) of a specific amount of moles of a compound (or element). </br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Run `python chemeng.py moles_to_mass <compound/element> <moles>`. </br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  For example you may run `python chemeng.py moles_to_mass H2O 2`. This will print `36 g`. </br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Likewise, you can run `python chemeng.py mass_to_moles <compound/element> <mass>` for calculating the moles of a given mass of a compound. For instance, `python chemeng.py moles_to_mass H2O 36` will print `2 moles`.
