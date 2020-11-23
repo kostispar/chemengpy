@@ -1,0 +1,17 @@
+{
+  "Al": {
+    "name" : "Argilium" ,
+    "atomic_number" : "13",
+    "atomic_weight" : "26.8915"
+  },
+  "H" : {
+    "name" : "Hydrogen" ,
+    "atomic_number" : "1",
+    "atomic_weight" : "1.00797"
+  },
+  "O" : {
+    "name" : "Oxygen" ,
+    "atomic_number" : "8",
+    "atomic_weight" : "15.9994"
+  }
+}
