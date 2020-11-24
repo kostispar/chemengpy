@@ -1,6 +1,8 @@
 import json
 import operator
 import argparse
+import re
+
 
 ops = {
     '+': operator.add,
@@ -10,6 +12,39 @@ ops = {
     '%': operator.mod,
     '^': operator.xor,
 }
+
+
+def molecular_properties(compound):
+    parentheses = re.findall('\(.*?\)',compound)
+    value = 0
+    if parentheses == []:
+        elements = re.findall('[A-Z][^A-Z]*', compound)
+    else:
+        for parenthesis in parentheses:
+            parenthesis.replace('(', '')
+            parenthesis.replace(')', '')
+        elements = []
+    with open('data/elements.json') as f:
+        data = json.load(f)
+    for element in elements:
+        amount = re.findall('[0-9]', element)
+        if amount == []:
+            amount.append(1)
+        element = re.findall('[A-Z]', element)
+        value += float(atomic_properties(element[0])[0]) * float(amount[0])
+    return value
+
+
+def atomic_properties(element):
+    with open('data/elements.json') as f:
+        data = json.load(f)
+    try:
+        data[element]
+    except Exception:
+        print("\n-----Error-----\nUnexpected error: The element you entered is not available"
+              "\n---------------\n")
+        raise
+    return data[element]['atomic_weight'], data[element]['atomic_number']
 
 
 def convert(quantity, unit_1, unit_2):
@@ -33,7 +68,8 @@ def si(physical_quantity, options=False):
         try:
             data[physical_quantity]['unit_name']
         except Exception:
-            print("Unexpected error: The quantity you entered is not available")
+            print("\n-----Error-----\nUnexpected error: The quantity you entered is not available"
+                  "\nPlease run 'python basic.py si --options' to see the available options\n---------------\n")
             raise
         return (data[physical_quantity]['unit_name'], data[physical_quantity]['symbol'],
                 data[physical_quantity]['definition'])
@@ -47,10 +83,18 @@ def parse_arguments():
     system_unit = tasks.add_parser("si", help="basic SI unit ")
     system_unit.add_argument("-i", "--input", help="physical quantity")
     system_unit.add_argument("--options", action="store_true", help="help")
+
     conversions = tasks.add_parser("convert", help="convert units")
     conversions.add_argument("-i", "--input", required=True, help="value")
     conversions.add_argument("-b", "--base", required=True, help="base unit")
     conversions.add_argument("-c", "--convert", required=True, help="unit to convert")
+
+    atomic_weights = tasks.add_parser("aw", help="atomic weights")
+    atomic_weights.add_argument("-i", "--input", required=True, help="element")
+
+    molecular_weights = tasks.add_parser("mw", help="molecular weights")
+    molecular_weights.add_argument("-i", "--input", required=True, help="compound")
+
     return parser.parse_args()
 
 
@@ -62,10 +106,15 @@ if __name__ == "__main__":
             for option in (si(None, True)):
                 print('- ' + option)
         elif args.input:
-            # call si
-            unit_name, symbol, definition = si(args.input)
-            print(args.input + " has SI unit '" + unit_name + "' and the symbol is '" + symbol + "'")
+            # call si and print output
+            print(args.input + " has SI unit '" + si(args.input)[0] + "' and the symbol is '" + si(args.input)[1] + "'")
     if args.task == "convert":
-        # call convert
-        value = convert(args.input, args.base, args.convert)
-        print(args.input + args.base + " are " + str(value) + args.convert)
+        # call convert and print output
+        print(args.input + args.base + " are " + str(convert(args.input, args.base, args.convert)) + args.convert)
+    if args.task == "aw":
+        # call atomic_weights and print output
+        print(args.input + " has atomic weight " + atomic_properties(args.input)[0] + "u " + "and atomic number " +
+              atomic_properties(args.input)[1])
+    if args.task == "mw":
+        # call molecular_weight and print output
+        print(molecular_properties(args.input))
