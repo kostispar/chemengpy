@@ -28,23 +28,33 @@ def convert(quantity, unit_1, unit_2):
 def si(physical_quantity):
     with open('data/si.json') as f:
         data = json.load(f)
-    unit_name = data[physical_quantity]['unit_name']
-    symbol = data[physical_quantity]['symbol']
-    definition = data[physical_quantity]['definition']
+    unit_name, symbol, definition = data[physical_quantity]['unit_name'], data[physical_quantity]['symbol'], data[physical_quantity]['definition']
     return(unit_name, symbol, definition)
 
-def main():
-    function = sys.argv[1]
-    if function == "si":
-        physical_quantity = sys.argv[2]
-        unit_name, symbol, definition = si(physical_quantity)
-        print(sys.argv[2]+ " has SI unit '"+ unit_name+ "' and the symbol is '"+ symbol+"'")
-    if function == "convert":
-        quantity = sys.argv[2]
-        unit_1 = sys.argv[3]
-        unit_2 = sys.argv[4]
-        value = convert(quantity, unit_1, unit_2)
-        print(quantity + unit_1 + " are " + str(value) + unit_2)
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="A demonstration script "
+                                                 "for pyAudioAnalysis library")
+    tasks = parser.add_subparsers(
+        title="subcommands", description="available tasks",
+        dest="task", metavar="")
+    si = tasks.add_parser("si",
+                                 help="basic SI unit ")
+    si.add_argument("-i", "--input", required=True, help="physical quantity")
+    convert = tasks.add_parser("convert",
+                                 help="convert units")
+    convert.add_argument("-i", "--input", required=True, help="value")
+    convert.add_argument("-b", "--base", required=True, help="base unit")
+    convert.add_argument("-c", "--convert", required=True, help="unit to convert")
+    return parser.parse_args()
+
 
 if __name__ == "__main__":
-    main()
+    args = parse_arguments()
+    if args.task == "si":
+        # call si
+        unit_name, symbol, definition = si(args.input)
+        print(args.input + " has SI unit '" + unit_name + "' and the symbol is '" + symbol + "'")
+    if args.task == "convert":
+        # call convert
+        value = convert(args.input, args.base, args.convert)
+        print(args.input + args.base + " are " + str(value) +args.convert)
