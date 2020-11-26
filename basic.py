@@ -15,12 +15,17 @@ ops = {
 
 
 def molecular_properties(compound):
-    parentheses = re.findall(r'\(.*?\)\d+', compound)                          # get compounds in parentheses
-    elements = re.findall(r'[A-Z][^A-Z]*', re.sub(r'\(.*?\)\d+', '', compound))  # get compounds not in parentheses
+    parentheses = re.findall(r'\(.*?\)\d+|\(.*?\)', compound)  # get compounds inside parentheses
+    elements = re.findall(r'[A-Z][^A-Z]*', re.sub(r'\(.*?\)\d+|\(.*?\)', '',
+                                                  compound))  # get compounds outside of parentheses
     mr = 0
     for compound in parentheses:
-        compound_moles = (re.findall(r'\)(\d+)', compound))[0]
-        compound_base = re.sub(r'(\(|\)\d+)', '', compound)
+        compound_moles = (re.findall(r'\)(\d+)', compound))
+        if not compound_moles:
+            compound_moles = 1
+        else:
+            compound_moles = compound_moles[0]
+        compound_base = re.sub(r'(\(|\)\d+|\))', '', compound)
         # split on elements
         sub_elements = re.findall(r'[A-Z][^A-Z]*', compound_base)
         value = 0
@@ -38,6 +43,7 @@ def molecular_properties(compound):
         if not amount:
             amount.append(1)
         element = re.sub(str(amount[0]), '', element)
+        print(element)
         value = float(atomic_properties(element)[0]) * float(amount[0])
         mr += float(value)
     return mr
