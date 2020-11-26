@@ -15,24 +15,32 @@ ops = {
 
 
 def molecular_properties(compound):
-    parentheses = re.findall('\(.*?\)',compound)
-    value = 0
-    if parentheses == []:
-        elements = re.findall('[A-Z][^A-Z]*', compound)
-    else:
-        for parenthesis in parentheses:
-            parenthesis.replace('(', '')
-            parenthesis.replace(')', '')
-        elements = []
-    with open('data/elements.json') as f:
-        data = json.load(f)
+    parentheses = re.findall(r'\(.*?\)\d+', compound)                          # get compounds in parentheses
+    elements = re.findall(r'[A-Z][^A-Z]*', re.sub(r'\(.*?\)\d+', '', compound))  # get compounds not in parentheses
+    mr = 0
+    for compound in parentheses:
+        compound_moles = (re.findall(r'\)(\d+)', compound))[0]
+        compound_base = re.sub(r'(\(|\)\d+)', '', compound)
+        # split on elements
+        sub_elements = re.findall(r'[A-Z][^A-Z]*', compound_base)
+        value = 0
+        for element in sub_elements:
+            amount = re.findall(r'[0-9]', element)
+            if not amount:
+                amount.append(1)
+            element = re.sub(str(amount[0]), '', element)
+            value += float(atomic_properties(element)[0]) * float(amount[0])
+        value = float(value) * float(compound_moles)
+        mr += float(value)
+
     for element in elements:
         amount = re.findall('[0-9]', element)
-        if amount == []:
+        if not amount:
             amount.append(1)
-        element = re.findall('[A-Z]', element)
-        value += float(atomic_properties(element[0])[0]) * float(amount[0])
-    return value
+        element = re.sub(str(amount[0]), '', element)
+        value = float(atomic_properties(element)[0]) * float(amount[0])
+        mr += float(value)
+    return mr
 
 
 def atomic_properties(element):

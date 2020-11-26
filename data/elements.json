@@ -13,5 +13,20 @@
     "name" : "Oxygen" ,
     "atomic_number" : "8",
     "atomic_weight" : "15.9994"
+  },
+  "Br" : {
+    "name" : "Bromine" ,
+    "atomic_number" : "35",
+    "atomic_weight" : "79.904"
+  },
+  "Cl" : {
+    "name" : "Chlorine" ,
+    "atomic_number" : "17",
+    "atomic_weight" : "35.453"
+  },
+  "S" : {
+    "name" : "Sulfur" ,
+    "atomic_number" : "16",
+    "atomic_weight" : "32.065"
   }
 }
