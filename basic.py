@@ -14,6 +14,18 @@ ops = {
 }
 
 
+def mass_to_moles(compound, mass):
+    mr = molecular_properties(compound)
+    moles = float(mass) / mr
+    return moles
+
+
+def moles_to_mass(compound, moles):
+    mr = molecular_properties(compound)
+    mass = float(moles) * float(mr)
+    return mass
+
+
 def molecular_properties(compound):
     parentheses = re.findall(r'\(.*?\)\d+|\(.*?\)', compound)  # get compounds inside parentheses
     elements = re.findall(r'[A-Z][^A-Z]*', re.sub(r'\(.*?\)\d+|\(.*?\)', '',
@@ -43,7 +55,6 @@ def molecular_properties(compound):
         if not amount:
             amount.append(1)
         element = re.sub(str(amount[0]), '', element)
-        print(element)
         value = float(atomic_properties(element)[0]) * float(amount[0])
         mr += float(value)
     return mr
@@ -103,11 +114,19 @@ def parse_arguments():
     conversions.add_argument("-b", "--base", required=True, help="base unit")
     conversions.add_argument("-c", "--convert", required=True, help="unit to convert")
 
-    atomic_weights = tasks.add_parser("aw", help="atomic weights")
+    atomic_weights = tasks.add_parser("atom_weight", help="atomic weights")
     atomic_weights.add_argument("-i", "--input", required=True, help="element")
 
-    molecular_weights = tasks.add_parser("mw", help="molecular weights")
+    molecular_weights = tasks.add_parser("mol_weight", help="molecular weights")
     molecular_weights.add_argument("-i", "--input", required=True, help="compound")
+
+    molestomass = tasks.add_parser("mol_to_mass", help="moles to mass")
+    molestomass.add_argument("-m", "--moles", required=True, help="moles")
+    molestomass.add_argument("-i", "--input", required=True, help="compound")
+
+    masstomoles = tasks.add_parser("mass_to_mol", help="moles to mass")
+    masstomoles.add_argument("-m", "--mass", required=True, help="mass")
+    masstomoles.add_argument("-i", "--input", required=True, help="compound")
 
     return parser.parse_args()
 
@@ -125,10 +144,16 @@ if __name__ == "__main__":
     if args.task == "convert":
         # call convert and print output
         print(args.input + args.base + " are " + str(convert(args.input, args.base, args.convert)) + args.convert)
-    if args.task == "aw":
+    if args.task == "atom_weight":
         # call atomic_weights and print output
         print(args.input + " has atomic weight " + atomic_properties(args.input)[0] + "u " + "and atomic number " +
               atomic_properties(args.input)[1])
-    if args.task == "mw":
+    if args.task == "mol_weight":
         # call molecular_weight and print output
         print(molecular_properties(args.input))
+    if args.task == "mol_to_mass":
+        # call molecular_weight and print output
+        print(moles_to_mass(args.input, args.moles))
+    if args.task == "mass_to_mol":
+        # call molecular_weight and print output
+        print(mass_to_moles(args.input, args.mass))

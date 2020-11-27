@@ -28,5 +28,10 @@
     "name" : "Sulfur" ,
     "atomic_number" : "16",
     "atomic_weight" : "32.065"
+  },
+  "C" : {
+    "name" : "Carbon" ,
+    "atomic_number" : "6",
+    "atomic_weight" : "12.0107"
   }
 }
