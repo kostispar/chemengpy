@@ -1,0 +1,17 @@
+{
+  "length": {
+    "unit_name" : "meter" ,
+    "symbol" : "m",
+    "definition" : "N/A"
+  },
+  "mass" : {
+    "unit_name" : "kilogram" ,
+    "symbol" : "kg",
+    "definition" : "N/A"
+  },
+  "Energy" : {
+    "unit_name" : "joule" ,
+    "symbol" : "J",
+    "definition" : "kg * (m^2) * (s^(-2))"
+  }
+}
