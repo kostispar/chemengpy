@@ -33,5 +33,10 @@
     "name" : "Carbon" ,
     "atomic_number" : "6",
     "atomic_weight" : "12.0107"
+  },
+  "Ba" : {
+    "name" : "Barium" ,
+    "atomic_number" : "56",
+    "atomic_weight" : "137.327"
   }
 }
